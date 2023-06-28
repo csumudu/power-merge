@@ -1,0 +1,91 @@
+<div class="inner-content" #container>
+    <div class="merge-input-container">
+      <form nz-form [nzLayout]="'inline'" [formGroup]="mergeCofigFG" (ngSubmit)="mergeFolders()">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please select source directory!">
+            <nz-input-group>
+              <input formControlName="sourceFolderPath" readonly (click)="onSourceClick('source')" nz-input
+                placeholder="Select Source Directory" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please select Target directory!">
+            <nz-input-group>
+              <input formControlName="targetFolderPath" nz-input readonly (click)="onSourceClick('target')"
+                placeholder="Select Target Directory" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please select Result directory!">
+            <nz-input-group>
+              <input formControlName="resultFolderPath" nz-input readonly (click)="onResultClick()"
+                placeholder="Select Result Directory" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="btn">
+          <nz-form-control>
+            <button nz-button nzType="primary" [disabled]="!mergeCofigFG.valid">Merge</button>
+            <button nz-button nzType="default" nzGhost class="clear-btn" (click)="clear()">Clear</button>
+          </nz-form-control>
+        </nz-form-item>
+       
+      </form>
+    </div>
+
+    <div class="file-list-wrapper">
+      <div class="f-list source-list">
+        <nz-list nzBordered nzSize="small">
+          <nz-list-header>Source</nz-list-header>
+          <nz-list-item *ngFor="let item of sourceFileList">{{item['relative_path']}}</nz-list-item>
+          <nz-list-footer>{{sourceFileList.length}} files selected</nz-list-footer>
+        </nz-list>
+      </div>
+
+      <div class="f-list source-list">
+        <nz-list nzBordered nzSize="small">
+          <nz-list-header>Target</nz-list-header>
+          <nz-list-item *ngFor="let item of targetFileList">{{item['relative_path']}}</nz-list-item>
+          <nz-list-footer>{{targetFileList.length}} files selected</nz-list-footer>
+        </nz-list>
+      </div>
+
+      <div class="f-list source-list">
+        <nz-list nzBordered nzSize="small">
+          <nz-list-header class="res">
+            Merged Files
+            <div>
+              <button nz-button nzType="primary" *ngIf="has_conflicts" nzGhost nzSize="small">Resolve All</button>
+              <button nz-button nzType="primary" *ngIf="resultFileList?.length && !has_conflicts" nzSize="small" (click)="openFolder()">Open Folder</button>
+            </div>
+
+          </nz-list-header>
+          <nz-list-item *ngFor="let item of resultFileList">
+            <div class="res-txt">
+              <span nz-icon nzType="{{item.has_conflicts?'exclamation-circle':'check-circle'}}"
+                [ngStyle]="{'color':item.has_conflicts? 'red':'green'}"></span>
+              
+                <span class="f-path" nzTrigger="click" nz-dropdown [nzDisabled]="item.has_conflicts"
+                [nzDropdownMenu]="menu">{{item['relative_path']}}</span>
+
+
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item (click)="compareWithSource(item)">Compare with Source</li>
+                  <li nz-menu-item>Compare with Target </li>
+                </ul>
+              </nz-dropdown-menu>
+              <div><button nz-button nzType="default" *ngIf="item.has_conflicts" nzGhost nzSize="small"
+                  (click)="resolveOne(item)">Resolve</button></div>
+            </div>
+          </nz-list-item>
+          <nz-list-footer>{{merged_file_count}}/{{resultFileList.length}} files created</nz-list-footer>
+        </nz-list>
+
+      </div>
+
+    </div>
+  </div> 
+

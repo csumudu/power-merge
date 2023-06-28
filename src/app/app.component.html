@@ -1,0 +1,17 @@
+<nz-layout nzTheme="dark">
+  <nz-header>
+    <div class="logo">
+      <img src="assets/logo-white.svg">
+    </div>
+    <div class="app-name">Power Tools</div>
+    <ul nz-menu nzMode="horizontal">
+      <li nz-menu-item [nzSelected]="r.route == selectedRoute" [routerLink]="[r.route]" *ngFor="let r of allTabs">{{r.name}}
+      </li>
+
+    </ul>
+  </nz-header>
+  <nz-content>
+    <router-outlet></router-outlet>
+  </nz-content>
+  <nz-footer>CSGI ©2023 Implement By Customer Connect Team</nz-footer>
+</nz-layout>
