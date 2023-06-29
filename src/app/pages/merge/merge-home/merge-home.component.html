@@ -74,7 +74,7 @@
               <nz-dropdown-menu #menu="nzDropdownMenu">
                 <ul nz-menu>
                   <li nz-menu-item (click)="compareWithSource(item)">Compare with Source</li>
-                  <li nz-menu-item>Compare with Target </li>
+                  <li nz-menu-item (click)="compareWithTarget(item)">Compare with Target </li>
                 </ul>
               </nz-dropdown-menu>
               <div><button nz-button nzType="default" *ngIf="item.has_conflicts" nzGhost nzSize="small"

@@ -24,3 +24,8 @@ nz-form-item.btn {
   flex: none !important;
   margin-right: 0;
 }
+
+nz-form-item.select-lang {
+  min-width: 10rem;
+  flex: 0 0 1rem !important;
+}

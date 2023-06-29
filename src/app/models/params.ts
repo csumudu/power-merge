@@ -3,3 +3,9 @@ export interface MergeParam {
   targetFolderPath: string;
   resultFolderPath: string;
 }
+
+export interface CompareParam {
+  sourcePath: string;
+  targetPath: string;
+  language: string;
+}

@@ -3,7 +3,7 @@
         <nz-form-item>
             <nz-form-control nzErrorTip="Please select source directory!">
                 <nz-input-group>
-                    <input formControlName="sourceFolderPath" readonly (click)="onSourceClick('source')" nz-input
+                    <input formControlName="sourcePath" readonly (click)="onSourceClick('source')" nz-input
                         placeholder="Select Source Directory" />
                 </nz-input-group>
             </nz-form-control>
@@ -11,9 +11,17 @@
         <nz-form-item>
             <nz-form-control nzErrorTip="Please select Target directory!">
                 <nz-input-group>
-                    <input formControlName="targetFolderPath" nz-input readonly (click)="onSourceClick('target')"
+                    <input formControlName="targetPath" nz-input readonly (click)="onSourceClick('target')"
                         placeholder="Select Target Directory" />
                 </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="select-lang">
+            <nz-form-control>
+                <nz-select nzShowSearch nzAllowClear formControlName="language">
+                    <nz-option [nzValue]="lan" [nzLabel]="lan" *ngFor="let lan of allLanguages"></nz-option>
+                </nz-select>
+
             </nz-form-control>
         </nz-form-item>
 

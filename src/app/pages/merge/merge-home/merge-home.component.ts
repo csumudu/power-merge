@@ -49,7 +49,7 @@ export class MergeHomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub.sink = this.service.getResultFileList().subscribe((list) => {
       this.resultFileList = list;
-      console.log("res file list -->",this.resultFileList)
+      console.log('res file list -->', this.resultFileList);
     });
 
     this.sub.sink = this.service
@@ -157,8 +157,27 @@ export class MergeHomeComponent implements OnInit, OnDestroy {
       path: sourceFile?.path,
     });
 
-    this.compareService.setSourceContent(sourceContent);
-    this.compareService.setTargetConent(resultContent);
+    this.compareService.setSourceContent(sourceFile?.path || '', sourceContent);
+    this.compareService.setTargetConent(resFile.path, resultContent);
+
+    this.router.navigate(['compare']);
+  }
+
+  async compareWithTarget(resFile: File) {
+    const resultContent: string = await invoke('open_file_content', {
+      path: resFile.path,
+    });
+
+    const targetFile = await this.targetFileList.find(
+      (f) => f.relative_path == resFile.relative_path,
+    );
+
+    const targetContent: string = await invoke('open_file_content', {
+      path: targetFile?.path,
+    });
+
+    this.compareService.setSourceContent(targetFile?.path || '', targetContent);
+    this.compareService.setTargetConent(resFile.path, resultContent);
 
     this.router.navigate(['compare']);
   }

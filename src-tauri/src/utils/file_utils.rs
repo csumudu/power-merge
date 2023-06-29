@@ -133,6 +133,8 @@ pub fn write_file(file: &File, content: String, output_directory: &str) {
 
 pub fn create_files(files: &[File], res_directory: &str) {
     for file in files {
+        print!("file to be created-->{}",file.path);
+        
         let content = fs::read_to_string(&file.path).expect("Failed to read file Two");
 
         write_file(&file, content, res_directory);

@@ -69,7 +69,17 @@ pub fn merge_folders(source: &str, target: &str, result: &str) -> Vec<File> {
     println!("target - {}", target);
     println!("result - {}", result);
 
-    let merged_result:Vec<File> = get_files_with_conflicts(source, target)
+    match fs::remove_dir_all(result) {
+        Ok(_) => println!("Directory successfully deleted -{}", result),
+        Err(e) => println!("Failed to delete the directort {:?}", e),
+    }
+
+    match fs::create_dir(result) {
+        Ok(_) => println!("Directory successfully Created {}", result),
+        Err(e) => println!("Failed to Create the directort {:?}", e),
+    }
+
+    let merged_result: Vec<File> = get_files_with_conflicts(source, target)
         .into_iter()
         .map(|mut f| {
             f.path = format!("{}/{}", result, f.relative_path).replace("//", "/");
@@ -81,6 +91,10 @@ pub fn merge_folders(source: &str, target: &str, result: &str) -> Vec<File> {
         .clone()
         .into_iter()
         .filter(|f| !f.has_conflicts)
+        .map(|mut f| {
+            f.path = format!("{}/{}", source, f.relative_path).replace("//", "/");
+            f
+        })
         .collect();
 
     println!("files without conflict - {:?}", files_without_conflicts);

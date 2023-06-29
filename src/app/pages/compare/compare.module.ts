@@ -14,7 +14,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 @NgModule({
   declarations: [CompareHomeComponent],
@@ -34,7 +34,7 @@ import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
     NzListModule,
     NzIconModule,
     NzDropDownModule,
-    NzPageHeaderModule
+    NzSelectModule
   ],
   exports: [CompareHomeComponent],
 })
