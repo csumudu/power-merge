@@ -12,6 +12,7 @@ import { SubSink } from 'subsink';
 import { File } from '../../../models/File';
 import { MergeManagerService } from '../../../service/merge-manager.service';
 import { CompareManagerService } from '../../../service/compare-manager.service';
+import { OpenFileManagerService } from '../../../service/open-file-manager.service';
 
 @Component({
   selector: 'app-merge-home',
@@ -37,6 +38,7 @@ export class MergeHomeComponent implements OnInit, OnDestroy {
     private fb: UntypedFormBuilder,
     private service: MergeManagerService,
     private compareService: CompareManagerService,
+    private openService: OpenFileManagerService,
     private router: Router,
   ) {
     this.mergeCofigFG = this.fb.group({
@@ -125,12 +127,26 @@ export class MergeHomeComponent implements OnInit, OnDestroy {
         let adapted = { ...f };
         if (f.relative_path == result_file.relative_path) {
           adapted.has_conflicts = false;
+          adapted.has_merged_content = true;
         }
         return adapted;
       });
 
       this.service.setResultFileList(resultFileList);
     }
+  }
+
+  async openFile(file: File) {
+    const resultContent: string = await invoke('open_file_content', {
+      path: file.result_path || file.path,
+    });
+
+    this.openService.setSourceContent(
+      file.result_path || file.path,
+      resultContent,
+    );
+
+    this.router.navigateByUrl('/merge/open');
   }
 
   async openFolder() {
@@ -146,7 +162,7 @@ export class MergeHomeComponent implements OnInit, OnDestroy {
   async compareWithSource(resFile: File) {
     console.log('res-->', resFile);
     const resultContent: string = await invoke('open_file_content', {
-      path: resFile.path,
+      path: resFile.result_path,
     });
 
     const sourceFile = await this.sourceFileList.find(
@@ -158,14 +174,17 @@ export class MergeHomeComponent implements OnInit, OnDestroy {
     });
 
     this.compareService.setSourceContent(sourceFile?.path || '', sourceContent);
-    this.compareService.setTargetConent(resFile.path, resultContent);
+    this.compareService.setTargetConent(
+      resFile.result_path || '',
+      resultContent,
+    );
 
     this.router.navigate(['compare']);
   }
 
   async compareWithTarget(resFile: File) {
     const resultContent: string = await invoke('open_file_content', {
-      path: resFile.path,
+      path: resFile.result_path,
     });
 
     const targetFile = await this.targetFileList.find(
@@ -177,7 +196,7 @@ export class MergeHomeComponent implements OnInit, OnDestroy {
     });
 
     this.compareService.setSourceContent(targetFile?.path || '', targetContent);
-    this.compareService.setTargetConent(resFile.path, resultContent);
+    this.compareService.setTargetConent(resFile.result_path||"", resultContent);
 
     this.router.navigate(['compare']);
   }

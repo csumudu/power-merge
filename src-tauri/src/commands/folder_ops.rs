@@ -82,22 +82,20 @@ pub fn merge_folders(source: &str, target: &str, result: &str) -> Vec<File> {
     let merged_result: Vec<File> = get_files_with_conflicts(source, target)
         .into_iter()
         .map(|mut f| {
-            f.path = format!("{}/{}", result, f.relative_path).replace("//", "/");
+            f.result_path = Some(format!("{}/{}", result, f.relative_path).replace("//", "/"));
             f
         })
         .collect();
+
+    println!("After added res path --> {:#?}",merged_result);
 
     let files_without_conflicts: Vec<File> = merged_result
         .clone()
         .into_iter()
         .filter(|f| !f.has_conflicts)
-        .map(|mut f| {
-            f.path = format!("{}/{}", source, f.relative_path).replace("//", "/");
-            f
-        })
         .collect();
 
-    println!("files without conflict - {:?}", files_without_conflicts);
+    println!("files without conflict - {:#?}", files_without_conflicts);
 
     create_files(&files_without_conflicts, &result);
 

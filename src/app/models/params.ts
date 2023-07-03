@@ -9,3 +9,7 @@ export interface CompareParam {
   targetPath: string;
   language: string;
 }
+export interface OpenParam {
+  sourcePath: string;
+  language: string;
+}

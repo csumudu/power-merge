@@ -33,10 +33,12 @@ pub fn parse_files_from_directory(dir_path: &str) -> Vec<File> {
 
                 files.push(File {
                     path,
+                    result_path: None,
                     relative_path,
                     sub_directories,
                     name: file_name.to_string(),
                     has_conflicts: false,
+                    has_merged_content: false,
                 })
             }
         }
@@ -74,8 +76,10 @@ pub fn get_files_with_conflicts(source: &str, target: &str) -> Vec<File> {
                     relative_path: file1.relative_path.clone(),
                     sub_directories: file1.sub_directories.clone(),
                     path: file1.path.clone(),
+                    result_path: None,
                     name: file1.name.clone(),
                     has_conflicts: true,
+                    has_merged_content: false,
                 });
             }
         } else {
@@ -100,6 +104,8 @@ pub fn get_files_with_conflicts(source: &str, target: &str) -> Vec<File> {
             merged_set.push(file2.clone());
         }
     }
+
+    dbg!(&merged_set);
 
     merged_set
 }
@@ -133,8 +139,8 @@ pub fn write_file(file: &File, content: String, output_directory: &str) {
 
 pub fn create_files(files: &[File], res_directory: &str) {
     for file in files {
-        print!("file to be created-->{}",file.path);
-        
+        print!("file to be created-->{}", file.path);
+
         let content = fs::read_to_string(&file.path).expect("Failed to read file Two");
 
         write_file(&file, content, res_directory);
@@ -208,8 +214,10 @@ pub fn merge_file_content(sourceFile: File, targetFile: File, resultFolderPath: 
                 relative_path: targetFile.relative_path.clone(),
                 sub_directories: targetFile.sub_directories.clone(),
                 path: targetFile.path.clone(),
+                result_path: None,
                 name: targetFile.name.clone(),
                 has_conflicts: false,
+                has_merged_content: true,
             };
 
             write_file(&tmp_file, merged_content, resultFolderPath);

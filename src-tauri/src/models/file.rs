@@ -5,8 +5,10 @@ use ts_rs::TS;
 #[ts(export, export_to = "../src/app/models/")]
 pub struct File {
     pub path: String,
+    pub result_path: Option<String>,
     pub relative_path: String,
     pub sub_directories: Vec<String>,
     pub name: String,
     pub has_conflicts: bool,
+    pub has_merged_content: bool,
 }

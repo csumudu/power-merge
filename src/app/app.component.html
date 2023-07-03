@@ -5,7 +5,7 @@
     </div>
     <div class="app-name">Power Tools</div>
     <ul nz-menu nzMode="horizontal">
-      <li nz-menu-item [nzSelected]="r.route == selectedRoute" [routerLink]="[r.route]" *ngFor="let r of allTabs">{{r.name}}
+      <li nz-menu-item [nzSelected]="selectedRoute.includes(r.route)" [routerLink]="[r.route]" *ngFor="let r of allTabs">{{r.name}}
       </li>
 
     </ul>

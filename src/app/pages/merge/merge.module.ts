@@ -10,16 +10,21 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { RouterModule } from '@angular/router';
+import { OpenEditorComponent } from './open-editor/open-editor.component';
+import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 @NgModule({
-  declarations: [MergeHomeComponent],
+  declarations: [MergeHomeComponent, OpenEditorComponent],
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule,
     ReactiveFormsModule,
+    MonacoEditorModule,
     NzButtonModule,
     MergeRoutingModule,
     NzLayoutModule,
@@ -30,6 +35,7 @@ import { RouterModule } from '@angular/router';
     NzListModule,
     NzIconModule,
     NzDropDownModule,
+    NzSelectModule,
   ],
   exports: [MergeHomeComponent],
 })

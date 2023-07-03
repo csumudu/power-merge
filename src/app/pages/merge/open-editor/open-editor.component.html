@@ -1,0 +1,28 @@
+<nz-breadcrumb>
+    <nz-breadcrumb-item><a routerLink="/merge">Merge</a></nz-breadcrumb-item>
+    <nz-breadcrumb-item>View File</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="inner-content">
+    <form nz-form [nzLayout]="'inline'" class="frm" [formGroup]="viewFG">
+        <nz-form-item class="source">
+            <nz-form-control nzErrorTip="Please select source directory!">
+                <nz-input-group>
+                    <input formControlName="sourcePath" readonly  nz-input
+                        placeholder="Select Source Directory" />
+                </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="select-lang">
+            <nz-form-control>
+                <nz-select nzShowSearch nzAllowClear formControlName="language">
+                    <nz-option [nzValue]="lan" [nzLabel]="lan" *ngFor="let lan of allLanguages"></nz-option>
+                </nz-select>
+
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <div class="editor-con">
+        <ngx-monaco-editor class="editor" [options]="options" [(ngModel)]="source"></ngx-monaco-editor>
+    </div>
+</div>
