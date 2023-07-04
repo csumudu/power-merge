@@ -1,4 +1,5 @@
 use std::{
+    fmt::format,
     fs,
     path::Path,
     process::{Command, Stdio},
@@ -7,6 +8,7 @@ use std::{
 use walkdir::WalkDir;
 
 use crate::models::File;
+use std::env;
 
 pub fn parse_files_from_directory(dir_path: &str) -> Vec<File> {
     let mut files: Vec<File> = Vec::new();
@@ -174,17 +176,19 @@ pub fn merge_file_content(sourceFile: File, targetFile: File, resultFolderPath: 
     let source_file_name = get_file_name((sourceFilePath));
     let target_file_name = get_file_name((targetFilePath));
 
-    let temp_path_1 = format!(
-        "C:/Users/Sumudu/projects/rust/merge-tools/cc-merge-2/data/_tmp/source/{}",
-        source_file_name
-    );
+    let tmp_dir = env::temp_dir().to_string_lossy().replace("\\", "/");
 
-    let temp_path_2 = format!(
-        "C:/Users/Sumudu/projects/rust/merge-tools/cc-merge-2/data/_tmp/target/{}",
-        target_file_name
-    );
+    let src_base = format!("{}/source", tmp_dir);
+    let tar_base = format!("{}/target", tmp_dir);
 
-    let res_path = "C:/Users/Sumudu/projects/rust/merge-tools/cc-merge-2/data/_tmp/merged.txt";
+    create_directory_tree(&src_base);
+    create_directory_tree(&tar_base);
+
+    let temp_path_1 = format!("{}/{}", src_base, source_file_name);
+
+    let temp_path_2 = format!("{}/{}", tar_base, target_file_name);
+
+    let res_path = format!("{}/merged.txt", tmp_dir);
 
     let source_content = fs::read_to_string(&sourceFilePath).expect("Failed to read Source file");
     let target_content = fs::read_to_string(&targetFilePath).expect("Failed to read Target file");
@@ -205,7 +209,7 @@ pub fn merge_file_content(sourceFile: File, targetFile: File, resultFolderPath: 
         .wait_with_output()
         .expect("Failed to wait for merge tool");
 
-    let mut merged_content = fs::read_to_string(res_path).unwrap();
+    let mut merged_content = fs::read_to_string(&res_path).unwrap();
 
     if output.status.success() {
         println!("Automatic merge successful.");
