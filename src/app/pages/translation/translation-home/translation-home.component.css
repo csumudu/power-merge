@@ -1,0 +1,13 @@
+.header{
+    display: flex;
+    column-gap: 0.5rem;
+}
+
+.inner-content {
+    border: solid 1px #424242;
+    padding: 24px;
+    min-height: 280px;
+    height:98%;
+    display: flex;
+    flex-direction: column;
+  }

@@ -6,6 +6,7 @@ use std::{
 };
 
 use walkdir::WalkDir;
+use serde_json::{Value, Map};
 
 use crate::models::File;
 use std::env;
@@ -148,6 +149,38 @@ pub fn create_files(files: &[File], res_directory: &str) {
         write_file(&file, content, res_directory);
     }
 }
+
+pub fn extract_values(json: &Value, result: &mut Vec<String>) {
+    match json {
+        Value::Object(map) => {
+            for (_, value) in map {
+                extract_values(value, result);
+            }
+        }
+        Value::String(s) => {
+            result.push(s.clone());
+        }
+        _ => {}
+    }
+}
+
+pub fn modify_values(json: &mut Value, values: &[String], index: &mut usize) {
+    match json {
+        Value::Object(map) => {
+            for (_, value) in map.iter_mut() {
+                modify_values(value, values, index);
+            }
+        }
+        Value::String(s) => {
+            if let Some(new_value) = values.get(*index) {
+                *json = Value::String(new_value.clone());
+                *index += 1;
+            }
+        }
+        _ => {}
+    }
+}
+
 
 pub fn get_file_name(path: &str) -> &str {
     let path = Path::new(path);

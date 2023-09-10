@@ -13,6 +13,13 @@ const routes: Routes = [
       import('./pages/compare/compare.module').then((m) => m.CompareModule),
   },
   {
+    path: 'translation',
+    loadChildren: () =>
+      import('./pages/translation/translation.module').then(
+        (m) => m.TranslationModule,
+      ),
+  },
+  {
     path: 'settings',
     loadChildren: () =>
       import('./pages/settings/settings.module').then((m) => m.SettingsModule),

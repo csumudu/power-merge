@@ -1,0 +1,56 @@
+<div class="merge-input-container">
+    <form nz-form [nzLayout]="'inline'" class="frm" [formGroup]="generateFG" (ngSubmit)="generate()">
+        <div class="row-1">
+            <nz-form-item>
+                <nz-form-control nzErrorTip="Please select source directory!">
+                    <nz-input-group>
+                        <input formControlName="sourcePath" readonly (click)="onSourceClick()" nz-input
+                            placeholder="Select i18n Directory" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item class="select-lang">
+                <nz-form-control>
+                    <nz-select nzShowSearch nzAllowClear formControlName="language" placeholder="Select Language">
+                        <nz-option [nzValue]="lan" [nzLabel]="lan.name" *ngFor="let lan of allLanguages"></nz-option>
+                    </nz-select>
+
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div class="row-2">
+            <nz-radio-group formControlName="translationTarget">
+                <label nz-radio [nzValue]="tra.code" *ngFor="let tra of allTranslateTargets">{{tra.name}}</label>
+            </nz-radio-group>
+            <nz-form-item class="btn">
+                <button nz-button nzType="primary" [disabled]="!generateFG.valid">Generate</button>
+                <button nz-button nzType="default" nzGhost class="clear-btn" (click)="clear()">Clear</button>
+            </nz-form-item>
+
+        </div>
+
+    </form>
+</div>
+<div class="langs">
+    <button (click)="onSelect(itm)" nz-button [nzType]="selectedLanguage?.name == itm.name?'primary':'default'"
+        *ngFor="let itm of languages">{{itm.name}}</button>
+</div>
+<div class="tab-content">
+    <div class="file-list-wrapper">
+        <div class="f-list source-list">
+            <nz-list nzBordered nzSize="small">
+                <nz-list-header>Source</nz-list-header>
+                <nz-list-item [ngClass]="{'selected':selectedFile?.path == item.path}"
+                    *ngFor="let item of sourceFileList"
+                    (click)="openFile(item)">{{item['relative_path']}}</nz-list-item>
+                <nz-list-footer>{{sourceFileList.length}} files selected</nz-list-footer>
+            </nz-list>
+        </div>
+
+        <div class="source-container">
+            <ngx-monaco-editor class="editor" [options]="options" [(ngModel)]="source"></ngx-monaco-editor>
+        </div>
+    </div>
+</div>

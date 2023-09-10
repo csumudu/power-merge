@@ -1,0 +1,102 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 250px;
+}
+.file-list-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  grid-template-rows: 1fr;
+  column-gap: 1rem;
+  height: 100%;
+}
+
+.clear-btn {
+  margin-left: 0.5rem;
+}
+
+.f-list {
+  height: 100%;
+  position: relative;
+}
+
+nz-list {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+
+form {
+  display: flex;
+  row-gap: 1rem;
+  flex-direction: column;
+}
+nz-form-item {
+  min-width: 200px;
+  flex: 1 !important;
+  color: white;
+}
+
+.btn {
+  flex: 0 !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  min-width: 160px;
+  margin-right: 0px;
+}
+
+.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector
+  .ant-select-selection-search-input {
+  color: white !important;
+}
+.row-1{
+    display: flex;
+    flex: 1;
+}
+
+.row-1 nz-form-item:last-child{
+    margin-right: 0px;
+}
+
+.row-2{
+    display: flex;
+    justify-content: space-between;
+}
+
+:host::ng-deep nz-select nz-select-search .input {
+  color: white !important;
+}
+
+nz-list-item {
+  cursor: pointer;
+}
+
+nz-list-item.selected {
+  background-color: #000000;
+}
+
+.langs {
+  padding-top: 1rem;
+}
+
+.editor {
+  height: 100%;
+}
+
+.source-container {
+  border: solid 1px #424242;
+  height: 100%;
+}
+
+.tab-content {
+  flex: 1;
+  padding: 1rem;
+  height: 100%;
+  background-color: #181818;
+}

@@ -6,10 +6,11 @@ use std::{
 
 use crate::models::File;
 use nfd2::{DialogType, Response};
+use serde_json::Value;
 
 use crate::utils::{
-    create_files, get_file_content_by_path, get_files_with_conflicts, merge_file_content,
-    parse_files_from_directory,
+    create_files, extract_values, getContent, get_file_content_by_path, get_files_with_conflicts,
+    merge_file_content, modify_values, parse_files_from_directory, write_file,
 };
 
 #[tauri::command]
@@ -64,6 +65,67 @@ pub fn get_selected_folder_path() -> String {
 }
 
 #[tauri::command]
+pub async fn generate_translations(
+    source: &str,
+    language: &str,
+    api: &str,
+) -> Result<Vec<File>, String> {
+    println!("source - {}", source);
+    println!("target - {}", language);
+
+    //TODO Read from environment
+    let url = "https://translation.googleapis.com/language/translate/v2?key=AIzaSyCjc6e8SajyPX7b0X40xWA9lREzmMwZlXk";
+
+    let source_files = parse_files_from_directory(source)
+        .into_iter()
+        .filter(|f| f.name == "en.json")
+        .map(|mut f: File| {
+            let old_name = f.name.clone();
+            let new_name = format!("{}.json", language);
+            f.name = new_name.clone();
+            f.result_path = Some(f.path.replace(&old_name, &new_name));
+            f
+        })
+        .collect::<Vec<File>>();
+
+    println!("Source Files {:?}", source_files);
+
+    for file in source_files {
+        print!("file to be created-->{}", file.path);
+
+        let content = fs::read_to_string(&file.path).expect("Failed to read file Two");
+        if (api == "google") {
+            let mut parsed: Value = serde_json::from_str(&content).expect("Failed to parse JSON");
+
+            let mut values_to_be_translated = Vec::new();
+            extract_values(&parsed, &mut values_to_be_translated);
+            println!("Values to be translated --->{:?}", values_to_be_translated);
+
+            let values_to_be_translated_str: Vec<&str> =
+                values_to_be_translated.iter().map(|s| s.as_str()).collect();
+
+            let translated_values = getContent(url, values_to_be_translated_str, language)
+                .await
+                .unwrap_or_default();
+
+            print!("Translated Values-->{:?}", translated_values);
+
+            let mut index = 0;
+            modify_values(&mut parsed, &translated_values, &mut index);
+
+            let updated_content =
+                serde_json::to_string_pretty(&parsed).expect("Failed to serialize JSON");
+
+            write_file(&file, updated_content, &source);
+        } else {
+            write_file(&file, content, &source);
+        }
+    }
+
+    Ok(parse_files_from_directory(source))
+}
+
+#[tauri::command]
 pub fn merge_folders(source: &str, target: &str, result: &str) -> Vec<File> {
     println!("source - {}", source);
     println!("target - {}", target);
@@ -87,7 +149,7 @@ pub fn merge_folders(source: &str, target: &str, result: &str) -> Vec<File> {
         })
         .collect();
 
-    println!("After added res path --> {:#?}",merged_result);
+    println!("After added res path --> {:#?}", merged_result);
 
     let files_without_conflicts: Vec<File> = merged_result
         .clone()

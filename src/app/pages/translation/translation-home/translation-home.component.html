@@ -1,0 +1,7 @@
+<div class="header">
+    <button (click)="onSelect(itm)" nz-button [nzType]="selectedMenu.name == itm.name?'primary':'default'"
+        *ngFor="let itm of menu">{{itm.name}}</button>
+</div>
+<div class="inner-content">
+    <router-outlet></router-outlet>
+</div>

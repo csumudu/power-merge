@@ -40,6 +40,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       route: '/compare',
     },
     {
+      name: 'Translation',
+      route: '/translation',
+    },
+    {
       name: 'Settings',
       route: '/settings',
     },

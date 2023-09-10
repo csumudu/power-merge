@@ -1,0 +1,38 @@
+<div class="merge-input-container">
+    <form nz-form [nzLayout]="'inline'">
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Please select i18n directory!">
+                <nz-input-group>
+                    <input readonly [value]="folderPath"  (click)="onSourceClick()" nz-input placeholder="Select Source Directory" />
+                </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="btn">
+            <nz-form-control>
+                <button nz-button nzType="default" nzGhost class="clear-btn" (click)="clear()">Clear</button>
+            </nz-form-control>
+        </nz-form-item>
+
+    </form>
+</div>
+<div class="langs">
+    <button (click)="onSelect(itm)" nz-button [nzType]="selectedLanguage?.name == itm.name?'primary':'default'"
+        *ngFor="let itm of languages">{{itm.name}}</button>
+</div>
+<div class="tab-content">
+    <div class="file-list-wrapper">
+        <div class="f-list source-list">
+            <nz-list nzBordered nzSize="small">
+                <nz-list-header>Source</nz-list-header>
+                <nz-list-item [ngClass]="{'selected':selectedFile?.path == item.path}"
+                    *ngFor="let item of sourceFileList"
+                    (click)="openFile(item)">{{item['relative_path']}}</nz-list-item>
+                <nz-list-footer>{{sourceFileList.length}} files selected</nz-list-footer>
+            </nz-list>
+        </div>
+
+        <div class="source-container">
+            <ngx-monaco-editor class="editor" [options]="options" [(ngModel)]="source"></ngx-monaco-editor>
+        </div>
+    </div>
+</div>

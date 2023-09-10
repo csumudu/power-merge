@@ -83,7 +83,7 @@ export class MergeHomeComponent implements OnInit, OnDestroy {
       target: this.mergeCofigFG.value.targetFolderPath,
       result: this.mergeCofigFG.value.resultFolderPath,
     });
-
+    
     console.log('Merge File set -->', res);
     this.service.setResultFileList(res);
   }
